@@ -6,6 +6,7 @@
 [![Single file](https://img.shields.io/badge/output-single%20HTML-0a84ff.svg)](#生成的文件)
 [![Offline](https://img.shields.io/badge/offline-100%25-149e5a.svg)](#隐私与离线)
 [![Live demo](https://img.shields.io/badge/demo-online-0a84ff.svg)](https://liurunzeeee-crypto.github.io/quizforge/)
+[![AI-assisted](https://img.shields.io/badge/AI%20assisted-DeepSeek%20Harness-8b5cf6.svg)](#共创说明)
 
 ![题目检测生成器 V1.10：导入 Word / PDF 题库](docs/screenshots/builder-import.png)
 
@@ -231,6 +232,16 @@ npm run validate       # 可选：Python + lxml 检查构建产物
 
 ---
 
+## 共创说明
+
+| 作者 | AI 编程助手 |
+|:---:|:---:|
+| <img src="https://github.com/liurunzeeee-crypto.png?size=160" width="88" height="88" alt="作者头像"><br>**[@liurunzeeee-crypto](https://github.com/liurunzeeee-crypto)**<br><sub>需求 / 设计 / 验证 / 发布</sub> | <img src="docs/screenshots/deepseek-avatar.png" width="88" height="88" alt="DeepSeek"><br>**DeepSeek Harness**<br><sub>代码 / 文档 / 测试</sub> |
+
+> AI 参与代码、文档和测试的起草与修改；需求、设计取舍、验证和最终发布由作者负责。
+
+---
+
 ## 许可证与第三方
 
 - 本项目源码：**MIT License**，见 [LICENSE](LICENSE)。
@@ -247,5 +258,7 @@ npm run validate       # 可选：Python + lxml 检查构建产物
 **QuizForge** is an offline, single-file quiz builder for Chinese exam-prep and classroom use.
 
 Import a Word document or a text-based PDF, review answers and images, then export a fully self-contained HTML quiz. Images are extracted automatically and embedded as data URLs. No server, no upload, no CDN, no account. Scanned PDFs are not OCR'd.
+
+Built with assistance from **DeepSeek Harness**; requirements, design decisions, and final review are the author's.
 
 

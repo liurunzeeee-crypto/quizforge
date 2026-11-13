@@ -14,6 +14,11 @@ Copyright (c) 2026 QuizForge contributors
    - 随 pdfjs-dist 3.11.174 分发
    - 许可：Apache License 2.0
 
+3. DeepSeek 名称与图标
+   - 权利归 DeepSeek 所有
+   - 用途：仅用于标识参与本项目开发的 AI 编程助手
+   - 本项目与 DeepSeek 官方无隶属、合作或背书关系
+
 除上述第三方组件外，本项目源码采用 MIT License，见根目录 LICENSE。
 
 用户导入的题目、答案、图片等内容的版权归原权利人所有；本项目仓库不附带任何教材、真题或培训机构题库。
