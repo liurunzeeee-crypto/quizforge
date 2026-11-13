@@ -197,7 +197,6 @@ npm run validate       # 可选：Python + lxml 检查构建产物
 ├─ dist/                    # 构建产物（单文件 HTML）
 ├─ docs/screenshots/        # README 截图
 ├─ examples/                # 自编示例题库
-├─ docs/GITHUB_UPLOAD.md    # 第一次上传 GitHub 的步骤
 ├─ LICENSE                  # MIT（本项目代码）
 ├─ NOTICE                   # PDF.js 等第三方声明
 └─ .github/                 # Issue 模板 / CI / Pages
@@ -248,13 +247,5 @@ npm run validate       # 可选：Python + lxml 检查构建产物
 **QuizForge** is an offline, single-file quiz builder for Chinese exam-prep and classroom use.
 
 Import a Word document or a text-based PDF, review answers and images, then export a fully self-contained HTML quiz. Images are extracted automatically and embedded as data URLs. No server, no upload, no CDN, no account. Scanned PDFs are not OCR'd.
-
----
-
-## 第一次上传 GitHub
-
-如果你也是第一次使用 GitHub，按 [docs/GITHUB_UPLOAD.md](docs/GITHUB_UPLOAD.md) 一步一步操作即可：创建仓库 → 上传源码 → 发 Release → 可选开启 Pages。
-
-> 上传前请确认 `private/`、`dev/`、`tests/.tmp/` 都已被 `.gitignore` 忽略；这些目录不会出现在公开仓库里。
 
 
