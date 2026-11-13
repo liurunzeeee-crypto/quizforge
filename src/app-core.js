@@ -404,6 +404,10 @@ var RE_LETTER_LIST = /^[ \t]*[A-Ha-h](?:[ \t,，、;；.．·\-/／]*[A-Ha-h]){1
 var RE_RANGE_ANS = /^[ \t]*\d{1,3}[ \t]*[-~—–至到][ \t]*\d{1,3}[ \t]*[:：]?[ \t]*(?:[A-Ha-h][ \t,，、;；/／]*)+[ \t]*$/;
 var RE_NUM_ANS_LINE = /^[ \t]*(?:\d{1,3}[ \t]*[.、．)）:：][ \t]*[A-Ha-h]{1,8}[ \t]*[,，、;；]?[ \t]*){2,}$/;
 var RE_ONE_NUM_ANS_LINE = /^[ \t]*[（(]?\d{1,3}[)）]?[ \t]*[.、．)）:：][ \t]*[A-Ha-h]{1,8}[ \t]*$/;
+var RE_PAGE_DECOR = /^[—–-]{1,2}\s*\d{1,4}\s*[—–-]{1,2}$/;
+var RE_PAGE_CN = /^(?:第\s*\d{1,4}\s*页(?:\s*[，,、/／]?\s*共\s*\d{1,4}\s*页)?|共\s*\d{1,4}\s*页\s*[，,、/／]?\s*第\s*\d{1,4}\s*页)$/;
+var RE_PAGE_EN = /^(?:page|p\.?)\s*\d{1,4}(?:\s*(?:of|\/)\s*\d{1,4})?$/i;
+var RE_PAGE_LABEL = /^(?:页码|page)\s*[:：]\s*\d{1,4}$/i;
 
 function isAnswerLine(text){
   var t = String(text || '').trim();
@@ -417,6 +421,18 @@ function isAnswerBlockLine(text){
 }
 function isOptionStart(text){
   return RE_OPT_LINE_START.test(String(text || '').trim());
+}
+/* Word 页脚页码：— 21 — / 第21页 / Page 21 等；不要并入上一题的选项 */
+function isPageNumberLine(text){
+  var t = String(text || '').trim();
+  if (!t) return false;
+  return RE_PAGE_DECOR.test(t) || RE_PAGE_CN.test(t) || RE_PAGE_EN.test(t) || RE_PAGE_LABEL.test(t);
+}
+function stripPageNumberSuffix(text){
+  return String(text || '')
+    .replace(/\s*[—–-]{1,2}\s*\d{1,4}\s*[—–-]{1,2}\s*$/, '')
+    .replace(/\s*第\s*\d{1,4}\s*页(?:\s*[，,、/／]?\s*共\s*\d{1,4}\s*页)?\s*$/, '')
+    .trim();
 }
 
 /* 扫描文本中的选项字母标记（行首、括号、或标点/空白之后） */
@@ -476,12 +492,13 @@ function pickOptionGroup(labels){
 }
 
 function cleanOption(s){
-  return String(s == null ? '' : s)
+  var out = String(s == null ? '' : s)
     .replace(/\r/g, '')
     .replace(/\n+/g, ' ')
     .replace(/[ \t]{2,}/g, ' ')
     .replace(/^[\s,，、;；.．:：)）]+/, '')
     .trim();
+  return stripPageNumberSuffix(out);
 }
 function cleanStem(s){
   return String(s == null ? '' : s)
@@ -623,6 +640,9 @@ function parseQuestionText(raw, opts){
       }
       continue;
     }
+
+    /* 页码是页脚，不是题目内容；跳过且不打断答案/解析状态 */
+    if (isPageNumberLine(trimmed)) continue;
 
     /* 答案块里的内容优先按答案处理，避免 “1.B 2.D” 被当成新题号 */
     if (inAnswer && !isAnswerBlockLine(trimmed)){

@@ -72,6 +72,56 @@ for (const [name, text] of Object.entries(png2Cases)) {
   });
 }
 
+// 2.1 Word 页脚页码：不能并进上一题的 D 选项
+test('Word 页码 — 21 — 不会并入选项', () => {
+  const r = parse(`10. 在 Photoshop CC中，使用多边形工具要绘制出[图1]需要勾选的选项是（ ）
+A. 星形和平滑拐角
+B. 星形和平滑缩进
+C. 星形和缩进边依据
+D. 平滑拐角和平滑缩进
+— 21 —
+11. 下一题
+A. 甲
+B. 乙`);
+  assert.equal(r.questions.length, 2, JSON.stringify(r));
+  deepEqual(r.questions[0].options, [
+    '星形和平滑拐角',
+    '星形和平滑缩进',
+    '星形和缩进边依据',
+    '平滑拐角和平滑缩进'
+  ]);
+  assert.equal(r.questions[0].options[3].includes('21'), false);
+});
+
+test('常见页码写法都不会并入选项', () => {
+  const marks = ['— 21 —', '- 21 -', '—— 21 ——', '第 21 页', '第21页，共30页', 'Page 21', 'P.21', '页码：21'];
+  for (const mark of marks) {
+    const r = parse(`1. 题干
+A. 甲
+B. 乙
+C. 丙
+D. 丁
+${mark}
+2. 下一题
+A. 甲
+B. 乙`);
+    assert.equal(r.questions.length, 2, mark + ' -> ' + JSON.stringify(r));
+    assert.equal(r.questions[0].options[3], '丁', mark);
+  }
+});
+
+test('页码和选项在同一行时也会被清掉', () => {
+  const r = parse(`1. 题干
+A. 甲
+B. 乙
+C. 丙
+D. 丁 — 21 —
+2. 下一题
+A. 甲
+B. 乙`);
+  assert.equal(r.questions[0].options[3], '丁');
+});
+
 // 3. 题号 / 章节 / 题型
 test('章节标题与题型', () => {
   const r = parse(`一、单项选择题
