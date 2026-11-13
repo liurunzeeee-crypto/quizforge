@@ -5,8 +5,11 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Single file](https://img.shields.io/badge/output-single%20HTML-0a84ff.svg)](#生成的文件)
 [![Offline](https://img.shields.io/badge/offline-100%25-149e5a.svg)](#隐私与离线)
+[![Live demo](https://img.shields.io/badge/demo-online-0a84ff.svg)](https://liurunzeeee-crypto.github.io/quizforge/)
 
 ![PDF 自动提取后的编辑器](docs/screenshots/builder-pdf.png)
+
+**[▶ 打开在线预览](https://liurunzeeee-crypto.github.io/quizforge/)** · 不用下载，浏览器里直接试用
 
 ---
 
@@ -63,7 +66,15 @@
 
 ## 快速开始
 
-### 普通用户（不需要安装任何东西）
+### 方式一：在线预览（最快）
+
+直接打开 **[https://liurunzeeee-crypto.github.io/quizforge/](https://liurunzeeee-crypto.github.io/quizforge/)**。
+
+- 不需要下载、不需要安装；
+- 页面从 GitHub Pages 加载，但题目仍然只在你浏览器里解析，不会上传；
+- 想离线使用、发给学生，再用下面的方式二。
+
+### 方式二：下载单文件（离线使用）
 
 1. 打开 [dist/题目检测生成器.html](dist/题目检测生成器.html)；
 2. 在文件页点 **Download raw**（或右键「链接另存为」）下载这个 HTML；
@@ -189,7 +200,7 @@ npm run validate       # 可选：Python + lxml 检查构建产物
 ├─ docs/GITHUB_UPLOAD.md    # 第一次上传 GitHub 的步骤
 ├─ LICENSE                  # MIT（本项目代码）
 ├─ NOTICE                   # PDF.js 等第三方声明
-└─ .github/                 # Issue 模板 / CI
+└─ .github/                 # Issue 模板 / CI / Pages
 ```
 
 ---

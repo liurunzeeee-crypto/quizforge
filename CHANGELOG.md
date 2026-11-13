@@ -28,6 +28,7 @@
 - 源码拆分为 core / import / pdf / ui 模块。
 - 增加单文件构建脚本、27 个解析器测试、7 个解压测试、浏览器端到端测试。
 - 引入 PDF.js 3.11.174（Apache-2.0）及中文 CMap。
+- 增加 GitHub Actions 构建测试与 GitHub Pages 在线预览（push 到 `main` 自动部署）。
 
 ### 已知限制
 

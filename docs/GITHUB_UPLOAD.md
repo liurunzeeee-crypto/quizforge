@@ -140,16 +140,22 @@ git push origin v1.10.0
 
 ---
 
-## 可选：开启 GitHub Pages 在线 Demo
+## 开启 GitHub Pages 在线预览
 
-仓库里已经带了 `.github/workflows/pages.yml`，但它是**手动触发**的，避免第一次上传时因为没开 Pages 出现红叉。
+仓库里已经带了 `.github/workflows/pages.yml`：推送到 `main` 会自动构建，并把 `dist/题目检测生成器.html` 作为首页部署到 Pages。
+
+第一次只需要手动开启一次：
 
 1. 打开仓库 **Settings** → **Pages**
 2. 在 **Build and deployment** 里把 Source 选为 **GitHub Actions**
 3. 打开仓库 **Actions** → **deploy pages** → **Run workflow** → 选择 `main` → 运行
 4. 完成后地址形如：`https://你的用户名.github.io/quizforge/`
 
+以后每次修改代码并 push 到 `main`，Pages 会自动重新部署，不需要再手动运行。
+
 Pages 上运行的是 Builder 本身；题目数据仍然只保存在访问者浏览器里，不会上传。
+
+> 如果 Actions 里的 `deploy pages` 第一次运行失败，通常是 Pages 还没开启。先按上面的第 1、2 步设置 Source，再重新运行一次。
 
 ---
 
@@ -209,6 +215,7 @@ GitHub 支持中文文件名。浏览器下载链接会自动编码，不影响�
 
 - 在仓库右侧 About 里填写 Description：
   `把 Word / 文字版 PDF 题库变成离线单文件自测网页`
+- 在 About 的 **Website** 填 Pages 地址：`https://你的用户名.github.io/quizforge/`
 - 添加 Topics：`quiz`、`offline`、`education`、`docx`、`pdf`、`single-file`、`chinese`
 - 发 Release，附上 `dist/题目检测生成器.html`
 - 在 README 顶部放一张截图
