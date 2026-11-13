@@ -1,0 +1,23 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+
+# Node.js
+node_modules/
+.pnpm-store/
+npm-debug.log*
+pnpm-debug.log*
+
+# Runtime / test output
+tests/.tmp/
+.chrome-profile*/
+dev/
+private/
+*.log
+
+# Python
+__pycache__/
+*.pyc

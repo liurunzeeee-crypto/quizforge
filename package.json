@@ -1,0 +1,26 @@
+{
+  "name": "quizforge",
+  "version": "1.10.0",
+  "private": true,
+  "type": "module",
+  "description": "题目检测生成器（QuizForge）：把 Word / 文字版 PDF 题库转成可离线分发的单文件自测网页。",
+  "keywords": [
+    "quiz",
+    "offline",
+    "education",
+    "docx",
+    "pdf",
+    "single-file",
+    "chinese"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node tests/core.test.mjs && node tests/inflate.test.mjs",
+    "test:e2e": "node tests/e2e.mjs",
+    "validate": "python tests/validate.py"
+  }
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>__QUIZ_TITLE__</title>
+<style>/*__QUIZ_CSS__*/</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head glass">
+    <div class="brandline">
+      <div class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="3.5" width="14" height="17" rx="3"></rect>
+          <path d="M8 8h6M8 12h6M8 16h3"></path>
+          <path d="M17.5 14.5l2 2 2.5-3"></path>
+        </svg>
+      </div>
+      <div style="flex:1 1 auto;min-width:0">
+        <h1 id="hTitle"></h1>
+        <p id="hSub"></p>
+        <div class="meta" id="metaChips"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="result" id="result"></div>
+
+  <div class="bar glass" id="bar">
+    <div class="bar-row">
+      <div class="stats" id="stats"></div>
+      <div class="bar-actions">
+        <button type="button" class="bbtn" id="btnMode" style="display:none"></button>
+        <button type="button" class="bbtn pri" id="btnSubmit" style="display:none">交卷评分</button>
+        <button type="button" class="bbtn" id="btnReset">重置</button>
+      </div>
+    </div>
+    <div class="prog"><i id="pbar"></i></div>
+  </div>
+
+  <div class="chips" id="chips">
+    <button type="button" class="chip on" data-f="all">全部</button>
+    <button type="button" class="chip" data-f="todo">未答</button>
+    <button type="button" class="chip" data-f="done">已答</button>
+    <button type="button" class="chip" data-f="wrong">错题</button>
+  </div>
+
+  <main id="list"></main>
+
+  <div class="endbar">
+    <button type="button" class="bbtn" id="btnTop">↑ 回到顶部</button>
+    <button type="button" class="bbtn" id="btnPrint">🖨 打印 / 存 PDF</button>
+  </div>
+
+  <footer class="foot" id="foot"></footer>
+</div>
+
+<button type="button" class="fab" id="fab" aria-label="打开答题卡">
+  <span>答题卡</span><span class="fb-n" id="fabN"></span>
+</button>
+
+<div class="sheet-mask" id="sheetMask">
+  <div class="sheet">
+    <div class="sh">
+      <b>答题卡</b>
+      <button type="button" class="bbtn" id="btnSheetWrong" style="display:none">只看错题</button>
+      <button type="button" class="bbtn" id="btnSheetClose">✕ 关闭</button>
+    </div>
+    <div class="sb"><div class="grid" id="grid"></div></div>
+    <div class="legend">
+      <span><i style="background:var(--soft)"></i>未答</span>
+      <span><i style="background:var(--accent-soft);border-color:var(--accent)"></i>已答</span>
+      <span><i style="background:var(--ok-soft);border-color:var(--ok-bd)"></i>正确</span>
+      <span><i style="background:var(--bad-soft);border-color:var(--bad-bd)"></i>错误</span>
+    </div>
+  </div>
+</div>
+
+<div class="lightbox" id="imgMask" role="dialog" aria-modal="true" aria-label="图片预览">
+  <button type="button" class="close" id="btnCloseImg" aria-label="关闭图片预览">✕</button>
+  <img id="imgView" alt="图片预览">
+</div>
+
+<script type="application/json" id="quiz-data">__QUIZ_DATA_JSON__</script>
+<script>/*__QUIZ_JS__*/</script>
+</body>
+</html>

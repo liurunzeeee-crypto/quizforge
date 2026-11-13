@@ -1,0 +1,19 @@
+题目检测生成器（QuizForge）
+Copyright (c) 2026 QuizForge contributors
+
+本项目包含以下第三方组件：
+
+1. PDF.js 3.11.174
+   - 来源：https://github.com/mozilla/pdf.js
+   - 许可：Apache License 2.0
+   - 文件：vendor/pdfjs/pdf.min.js、vendor/pdfjs/pdf.worker.min.js、vendor/pdfjs/cmaps/
+   - 完整许可证：vendor/pdfjs/LICENSE
+   - 版权声明：Copyright 2023 Mozilla Foundation
+
+2. PDF.js 附带的中文 CMap 数据（Adobe-GB1 / GB / GBK / GBT / UniGB）
+   - 随 pdfjs-dist 3.11.174 分发
+   - 许可：Apache License 2.0
+
+除上述第三方组件外，本项目源码采用 MIT License，见根目录 LICENSE。
+
+用户导入的题目、答案、图片等内容的版权归原权利人所有；本项目仓库不附带任何教材、真题或培训机构题库。

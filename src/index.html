@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<!--
+  QuizForge / 题目检测生成器
+  Copyright (c) 2026 QuizForge contributors
+  Licensed under the MIT License. See LICENSE.
+  Includes PDF.js 3.11.174 (Apache-2.0). See vendor/pdfjs/LICENSE.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>题目检测生成器 · 离线版</title>
+<style>/*__BUILDER_CSS__*/</style>
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true">
+  <span class="blob b1"></span><span class="blob b2"></span>
+  <span class="blob b3"></span><span class="blob b4"></span>
+</div>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="wrap">
+
+  <!-- ================= 顶部 ================= -->
+  <header class="hero glass">
+    <div class="hero-top">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="3.5" width="14" height="17" rx="3"></rect>
+          <path d="M8 8h6M8 12h6M8 16h3"></path>
+          <path d="M17.5 14.5l2 2 2.5-3"></path>
+        </svg>
+      </div>
+      <div class="hero-copy">
+        <h1><span class="grad">题目检测生成器</span><span class="ver">V 1.10</span></h1>
+        <p class="lead">导入题目文本，或直接读取带图片的 Word（DOCX）／文字版 PDF／网页；校对答案后一键生成可离线使用的自测页面。全程只在本机浏览器完成，不联网、不上传。</p>
+        <div class="tagline">
+          <span class="pill"><span class="dot"></span>纯离线单文件</span>
+          <span class="pill g"><span class="dot"></span>TXT · DOCX · PDF · HTML</span>
+          <span class="pill v"><span class="dot"></span>题干 / 选项图片</span>
+          <span class="pill o"><span class="dot"></span>练习 + 考试双模式</span>
+        </div>
+      </div>
+      <div class="hero-tools">
+        <button type="button" class="icon-round" id="btnTheme" title="切换深色 / 浅色" aria-label="切换深色或浅色主题">
+          <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <circle cx="12" cy="12" r="4.2"></circle>
+            <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"></path>
+          </svg>
+          <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+            <path d="M20 14.6A8.4 8.4 0 1 1 9.4 4a6.8 6.8 0 0 0 10.6 10.6z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= 标签页 ================= -->
+  <nav class="tabs glass" id="tabs" aria-label="工作区">
+    <button type="button" class="tab on" data-tab="import"><span class="ico">①</span>导入题目</button>
+    <button type="button" class="tab" data-tab="edit"><span class="ico">②</span>校对与答案 <span class="cnt" id="tabCnt">0</span></button>
+    <button type="button" class="tab" data-tab="gen"><span class="ico">③</span>生成导出</button>
+    <button type="button" class="tab" data-tab="bank"><span class="ico">✦</span>题库</button>
+  </nav>
+
+  <!-- ================= ① 导入 ================= -->
+  <section class="panel on" id="panel-import">
+
+    <details class="help">
+      <summary>📖 使用说明 · 支持格式 · 图片题目怎么导入（点开看）</summary>
+      <div class="hb">
+
+        <h4>推荐流程</h4>
+        <ul>
+          <li><b>纯文字题目</b>：从 Word、PDF、网页复制文字粘进输入框（PDF 建议先转成 Word 或 DOCX）。</li>
+          <li><b>带图片的题目</b>：直接导入 <b>.docx</b> 或 <b>文字版 .pdf</b>，工具会自动提取正文、表格和图片，并按原位置放回题干 / 选项；也可以把截图直接粘贴或拖进②校对页面的题干、选项。</li>
+          <li>点「解析题目」→ 在②中核对答案、补齐图片 → 到③生成并下载独立 HTML。</li>
+        </ul>
+
+        <h4>图片题目（1.10 新增）</h4>
+        <ul>
+          <li><b>导入 DOCX</b>：Word 里的图片会按出现顺序变成 <code>[图1]</code>、<code>[图2]</code> 标记，跟在原来的题干或选项文字后面，生成页面时自动还原成图片。</li>
+          <li><b>导入文字版 PDF</b>：内置 PDF.js，自动提取文字和页面内嵌图片；图片按页面位置插回题目，不需要手动下载、粘贴。扫描版 PDF 没有文字层，不支持 OCR，会提示改用 Word 另存 DOCX。</li>
+          <li><b>导入 HTML</b>：支持带 <code>data:image</code> 内嵌图片的网页文件；外链图片（http/https）在离线环境无法读取，会给出提示。</li>
+          <li><b>粘贴 / 拖拽截图</b>：在②里点题干或选项右侧的 🖼 按钮，或直接把截图粘贴到输入框里。</li>
+          <li>图片会自动压缩（最长边约 1400px）后写入题库，避免草稿超过浏览器存储上限。</li>
+        </ul>
+
+        <h4>支持的题目格式（混着用也行）</h4>
+<pre>1. 采用集中式控制策略的网络拓扑结构是（ ）。
+A. 总线型
+B. 星状
+C. 环状
+D. 树状
+
+2、下列属于广播信道的结构是（ ）
+A、星型  B、环型  C、总线型  D、卫星
+
+3．OSI 表示什么？(A)Operating System Information (B)Open System Interconnection (C)其它 (D)以上都对
+
+4. 网络分层的原则包括（ ）【多选】
+A. 每层功能明确
+B. 层次越多越好
+C. 减少跨接口通信量
+D. 有助于国际化标准
+答案：ACD
+解析：层次过多会增加开销，B 错误。</pre>
+
+        <h4>题号 / 选项 / 答案写法</h4>
+        <ul>
+          <li>题号：<code>1.</code> <code>1、</code> <code>1)</code> <code>1）</code> <code>(1)</code> <code>（1）</code> <code>第1题</code>。</li>
+          <li>选项：<code>A.</code> <code>A、</code> <code>A)</code> <code>A）</code> <code>(A)</code> <code>（A）</code>，最多到 H；可以每行一个，也可以全挤在一行。</li>
+          <li>选项内容只有一个字母也可以，例如 <code>A.C</code>、<code>B.B</code>，不会被误当成答案。</li>
+          <li>答案：<code>答案：B</code>、<code>1.B 2.D 3.A</code>、<code>1-5 BDDAC</code>、<code>1~10：BDDAC CBCAA</code>，或整串纯字母 <code>BDDAC CBCAA</code>（按题号顺序匹配）。</li>
+          <li>章节标题：<code>一、单项选择题</code>、<code>二、多选题</code>、<code>三、判断题</code> 会自动给后续题目设定题型。</li>
+        </ul>
+
+        <h4>选项字母重复 / 版面错乱时</h4>
+        <ul>
+          <li>粘贴两栏 PDF 时，偶尔会在 A–D 之后又出现一组 <code>C.</code> / <code>D.</code>。工具会把重复字母的内容标为「未归属片段」，<b>不会再塞进 D 选项</b>，并在解析报告里原文列出，方便手动处理。</li>
+          <li>如果某题选项没有分开，可在②的题目卡片里点「整理选项」，按题干里的 <code>A.</code> / <code>B.</code> 标记重新拆分（会清空本题答案，需重新选）。</li>
+          <li>如果某题确认是 6 个选项（A–F），请让选项字母连续到 F；重复字母无法自动判定归属。</li>
+        </ul>
+
+        <h4>PDF 与扫描件</h4>
+        <ul>
+          <li><b>文字版 PDF</b>：直接导入即可，工具会自动提取文字、表格文字和内嵌图片，并按页面位置把图片插回题干 / 选项；几十页的 PDF 可能需要等几秒到十几秒。</li>
+          <li><b>扫描版 / 纯图片 PDF</b>：没有文字层，工具不做 OCR，会提示先用 OCR 工具（WPS / Adobe / 白描等）识别文字，或把截图逐题贴进选项。</li>
+          <li>如果 PDF 使用了未内置的特殊字体映射，文字可能提取失败，也会提示改用 Word 转 DOCX。</li>
+          <li>PDF.js 已内嵌在 HTML 中（Apache-2.0），不联网、不上传文件。</li>
+        </ul>
+      </div>
+    </details>
+
+    <div class="card">
+      <h2><span class="ico">📥</span>导入题目 <span class="sub">粘贴文本，或选择 TXT / DOCX / PDF / HTML 文件</span></h2>
+
+      <div class="field">
+        <div class="row tight" style="margin-bottom:9px">
+          <button type="button" class="btn sm" id="btnPickFile">📂 导入文件</button>
+          <select id="encSel" style="width:auto;padding:8px 34px 8px 12px;font-size:.82rem">
+            <option value="UTF-8">UTF-8 编码</option>
+            <option value="GBK">GBK / ANSI 编码</option>
+          </select>
+          <button type="button" class="btn sm" id="btnDemo">填入示例</button>
+          <button type="button" class="btn sm dgr" id="btnClearInput">清空</button>
+          <input type="file" id="fileInput" accept=".txt,.md,.text,.csv,.docx,.pdf,.html,.htm,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/html" style="display:none">
+        </div>
+        <textarea id="rawInput" class="mono" rows="14" placeholder="把题目文本粘贴到这里……&#10;&#10;可以直接粘贴从 Word / 网页复制的文字，或点上方「导入文件」选择 DOCX / 文字版 PDF（自动带图片）。题干和选项里也可以直接粘贴截图。"></textarea>
+        <div class="import-status" id="importStatus"><span class="spinner"></span><span id="importStatusText">正在处理…</span></div>
+        <p class="hint" id="fileHint">未选择文件。读取本地文件不会上传到任何地方；TXT 若乱码，把编码切到 GBK 再选一次。DOCX / PDF / HTML 会自动读取。</p>
+      </div>
+
+      <div class="field">
+        <label class="fl" for="answerInput">答案单独导入（可选）</label>
+        <textarea id="answerInput" class="mono" rows="4" placeholder="如果答案不在上面的题目文本里，可以单独贴在这里，例如：&#10;BDDAC CBCAA ACCDA DCBBC&#10;或：1.B 2.D 3.A&#10;或：1-5 BDDAC"></textarea>
+        <p class="hint">留空则只使用题目文本中识别到的答案。</p>
+      </div>
+
+      <div class="field">
+        <div class="row">
+          <div class="inline-field">
+            <label class="fl" for="defaultType">未标注题型的题目默认按</label>
+            <select id="defaultType">
+              <option value="single">单选题</option>
+              <option value="multi">多选题</option>
+              <option value="judge">判断题</option>
+            </select>
+          </div>
+          <div class="inline-field">
+            <label class="fl">&nbsp;</label>
+            <label class="chk"><input type="checkbox" id="autoAnswer" checked>
+              <span><b>自动识别文本中的答案</b><i>识别后仍需在②中核对</i></span></label>
+          </div>
+          <div class="inline-field">
+            <label class="fl">&nbsp;</label>
+            <label class="chk"><input type="checkbox" id="appendMode">
+              <span><b>追加到现有题库</b><i>不勾选则替换全部题目</i></span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-bar">
+        <button type="button" class="btn pri" id="btnParse">⚙️ 解析题目</button>
+        <button type="button" class="btn" id="btnGoEdit">前往校对 →</button>
+      </div>
+    </div>
+
+    <div id="parseReport"></div>
+  </section>
+
+  <!-- ================= ② 校对 ================= -->
+  <section class="panel" id="panel-edit">
+
+    <div class="card">
+      <h2><span class="ico">📊</span>题库概况</h2>
+      <div class="metrics" id="metrics"></div>
+      <div id="editReport"></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="ico">✍️</span>批量录入答案 <span class="sub">整串粘贴，按题号顺序匹配</span></h2>
+      <div class="field">
+        <textarea id="batchAnswer" class="mono" rows="3" placeholder="BDDAC CBCAA ACCDA DCBBC&#10;或 1.B 2.D 3.A&#10;或 1-5 BDDAC"></textarea>
+      </div>
+      <div class="row tight">
+        <button type="button" class="btn sm pri" id="btnApplyAnswers">应用到全部题目</button>
+        <button type="button" class="btn sm" id="btnApplyAnswersVis">仅应用到当前筛选结果</button>
+        <select id="batchType" style="width:auto;padding:8px 34px 8px 12px;font-size:.82rem">
+          <option value="">批量改题型…</option>
+          <option value="single">全部设为单选</option>
+          <option value="multi">全部设为多选</option>
+          <option value="judge">全部设为判断</option>
+        </select>
+        <select id="batchScope" style="width:auto;padding:8px 34px 8px 12px;font-size:.82rem">
+          <option value="all">作用于全部</option>
+          <option value="vis">作用于当前筛选</option>
+        </select>
+        <button type="button" class="btn sm" id="btnBatchType">执行</button>
+        <button type="button" class="btn sm dgr" id="btnClearAnswers">清空全部答案</button>
+      </div>
+      <p class="hint">逐题作答：直接点题目卡片左侧的 A / B / C / D 按钮（绿色 = 正确答案，多选题可点亮多个字母）。</p>
+    </div>
+
+    <div class="card">
+      <h2><span class="ico">🔍</span>筛选与编辑 <span class="sub">题干和选项里都可以粘贴图片</span></h2>
+      <div class="row" style="margin-bottom:11px">
+        <div class="grow"><input type="search" id="kwInput" placeholder="搜索题干或选项关键词…" autocomplete="off"></div>
+        <button type="button" class="btn sm" id="btnAddQ">＋ 手动添加题目</button>
+      </div>
+      <div class="filters" id="filters">
+        <button type="button" class="chip on" data-f="all">全部</button>
+        <button type="button" class="chip" data-f="noanswer">缺答案</button>
+        <button type="button" class="chip" data-f="issue">有问题</button>
+        <button type="button" class="chip" data-f="image">含图片</button>
+        <button type="button" class="chip" data-f="single">单选</button>
+        <button type="button" class="chip" data-f="multi">多选</button>
+        <button type="button" class="chip" data-f="judge">判断</button>
+      </div>
+      <div class="qlist" id="qlist"></div>
+      <div class="pager" id="pager"></div>
+      <div class="btn-bar">
+        <button type="button" class="btn dgr" id="btnClearAll">🗑 清空全部题目</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ③ 生成 ================= -->
+  <section class="panel" id="panel-gen">
+    <div class="card">
+      <h2><span class="ico">🎨</span>检测页面设置</h2>
+      <div class="field">
+        <label class="fl" for="gTitle">页面标题</label>
+        <input type="text" id="gTitle" placeholder="例如：第3章 计算机网络技术基础 · 选择题自测">
+      </div>
+      <div class="field">
+        <label class="fl" for="gSub">副标题说明</label>
+        <input type="text" id="gSub" placeholder="例如：点击选项即时判断对错 · 共 103 题">
+      </div>
+      <div class="field">
+        <label class="fl" for="gFoot">页脚来源说明</label>
+        <input type="text" id="gFoot" placeholder="例如：题目来源《第3章 计算机网络技术基础》">
+      </div>
+      <div class="row">
+        <div class="inline-field">
+          <label class="fl" for="gMode">作答模式</label>
+          <select id="gMode">
+            <option value="both">两种都内置，答题时可切换（推荐）</option>
+            <option value="practice">只有练习模式（点选即判分）</option>
+            <option value="exam">只有考试模式（统一交卷）</option>
+          </select>
+        </div>
+        <div class="inline-field">
+          <label class="fl" for="gTheme">主题色</label>
+          <select id="gTheme">
+            <option value="blue">冰川蓝（默认）</option>
+            <option value="green">森林绿</option>
+            <option value="violet">星云紫</option>
+            <option value="orange">落日橙</option>
+            <option value="dark">深空黑</option>
+          </select>
+        </div>
+        <div class="inline-field">
+          <label class="fl" for="gPass">考试模式及格线（%）</label>
+          <input type="number" id="gPass" min="0" max="100" step="5" value="60">
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <label class="chk" style="flex:1 1 240px"><input type="checkbox" id="gShufQ">
+          <span><b>题目乱序</b><i>每次打开顺序不同</i></span></label>
+        <label class="chk" style="flex:1 1 240px"><input type="checkbox" id="gShufO">
+          <span><b>选项乱序</b><i>判断题不参与乱序</i></span></label>
+        <label class="chk" style="flex:1 1 240px"><input type="checkbox" id="gAna" checked>
+          <span><b>显示解析</b><i>仅在填了解析时生效</i></span></label>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <label class="chk" style="flex:1 1 240px"><input type="checkbox" id="gPersist" checked>
+          <span><b>记住作答进度</b><i>存在答题者本机浏览器</i></span></label>
+        <label class="chk" style="flex:1 1 240px"><input type="checkbox" id="gShowAns" checked>
+          <span><b>答错后显示正确答案</b><i>练习模式下</i></span></label>
+        <label class="chk" style="flex:1 1 240px"><input type="checkbox" id="gRetry" checked>
+          <span><b>允许重做单题</b><i>练习模式下</i></span></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="ico">🚀</span>导出</h2>
+      <div class="report info" id="genSummary"></div>
+      <div class="btn-bar">
+        <button type="button" class="btn ok" id="btnDownload">⬇️ 生成并下载 HTML</button>
+        <button type="button" class="btn pri" id="btnPreview">👁 预览效果</button>
+        <button type="button" class="btn" id="btnCopy">📋 复制 HTML 源码</button>
+      </div>
+      <p class="hint">生成的文件是完全独立的单个 HTML（图片已内嵌），双击即可用浏览器打开，不需要联网，可以随意拷贝到 U 盘或发给学生。</p>
+      <div class="field" style="margin-top:14px">
+        <label class="fl" for="outName">导出文件名</label>
+        <input type="text" id="outName" placeholder="第三章检测">
+        <p class="hint">不需要写 .html，会自动补上。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 题库 ================= -->
+  <section class="panel" id="panel-bank">
+    <div class="card">
+      <h2><span class="ico">💾</span>题库管理 <span class="sub">所有内容只保存在你这台电脑上</span></h2>
+      <p class="hint" style="margin-bottom:13px">编辑过程中会自动存进浏览器本地，刷新或关掉页面再打开都还在。图片也一起保存；内容较多时建议定期导出 JSON 备份。</p>
+      <div class="btn-bar" style="margin-top:0">
+        <button type="button" class="btn pri" id="btnExportJson">⬇️ 导出题库 JSON</button>
+        <button type="button" class="btn" id="btnImportJson">📂 导入题库 JSON</button>
+        <button type="button" class="btn" id="btnGcImages">🧹 清理未使用图片</button>
+        <button type="button" class="btn dgr" id="btnWipe">🗑 清除本地草稿</button>
+        <input type="file" id="jsonInput" accept=".json,application/json" style="display:none">
+      </div>
+      <div class="report info" style="margin-top:16px" id="bankInfo"></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="ico">🔒</span>关于离线与隐私</h2>
+      <ul style="margin-left:18px;font-size:.88rem;color:var(--ink-2);display:grid;gap:5px">
+        <li>本工具是单个 HTML 文件，不引用任何 CDN、字体、图片或第三方脚本。</li>
+        <li>断网状态下所有功能（导入、编辑、图片处理、生成、下载、预览）均可正常使用。</li>
+        <li>题目、答案、图片、设置只写入浏览器 localStorage，不会发送到任何服务器。</li>
+        <li>生成的检测页面同样零外部依赖，图片以 data URL 内嵌，可在 Chrome / Edge / Firefox / Safari 离线打开。</li>
+        <li>DOCX 解析在浏览器内完成（ZIP 解压 + OOXML 读取），PDF 解析使用内嵌的 PDF.js（Apache-2.0），都不依赖 Office 或网络。</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="foot">
+    题目检测生成器 · V1.10 · 离线单文件工具 · 数据不出本机
+    <div class="kbd-hint">TXT / DOCX / PDF / HTML 导入 · 图片题干与选项 · Liquid Glass UI</div>
+  </div>
+</div>
+
+<!-- ================= 预览 ================= -->
+<div class="mask" id="previewMask">
+  <div class="modal">
+    <div class="mh">
+      <b>检测页面预览</b>
+      <button type="button" class="btn sm" id="btnDlInPreview">⬇️ 下载</button>
+      <button type="button" class="btn sm" id="btnClosePreview">✕ 关闭</button>
+    </div>
+    <div class="mb"><iframe id="previewFrame" title="检测页面预览" sandbox="allow-scripts allow-modals allow-downloads"></iframe></div>
+  </div>
+</div>
+
+<!-- ================= 图片查看 ================= -->
+<div class="lightbox" id="imgMask" role="dialog" aria-modal="true" aria-label="图片预览">
+  <button type="button" class="close" id="btnCloseImg" aria-label="关闭图片预览">✕</button>
+  <img id="imgView" alt="图片预览">
+</div>
+
+<!-- 隐藏的图片选择器 -->
+<input type="file" id="imgFileInput" accept="image/png,image/jpeg,image/webp,image/gif,image/bmp,image/svg+xml" multiple style="display:none">
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<!-- ================= PDF.js（仅文字版 PDF 导入使用，构建时内嵌） ================= -->
+<script>/*__PDFJS_MAIN__*/</script>
+<script>/*__PDFJS_DATA__*/</script>
+
+<!-- ================= 生成页面模板（构建时注入） ================= -->
+<script>/*__QUIZ_TEMPLATE__*/</script>
+
+<!-- ================= Builder 逻辑 ================= -->
+<script>/*__APP_JS__*/</script>
+</body>
+</html>
