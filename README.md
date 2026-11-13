@@ -7,7 +7,7 @@
 [![Offline](https://img.shields.io/badge/offline-100%25-149e5a.svg)](#隐私与离线)
 [![Live demo](https://img.shields.io/badge/demo-online-0a84ff.svg)](https://liurunzeeee-crypto.github.io/quizforge/)
 
-![PDF 自动提取后的编辑器](docs/screenshots/builder-pdf.png)
+![题目检测生成器 V1.10：导入 Word / PDF 题库](docs/screenshots/builder-import.png)
 
 **[▶ 打开在线预览](https://liurunzeeee-crypto.github.io/quizforge/)** · 不用下载，浏览器里直接试用
 
