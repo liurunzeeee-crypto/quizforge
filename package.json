@@ -1,6 +1,6 @@
 {
   "name": "quizforge",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "private": true,
   "type": "module",
   "description": "题目检测生成器（QuizForge）：把 Word / 文字版 PDF 题库转成可离线分发的单文件自测网页。",

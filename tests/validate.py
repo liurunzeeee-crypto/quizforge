@@ -17,7 +17,7 @@ scripts = doc.xpath('//script')
 texts = [s.text or '' for s in scripts]
 print('scripts:', len(scripts))
 template_idx = next((i for i, t in enumerate(texts) if 'var QUIZ_TEMPLATE = "' in t), -1)
-app_idx = next((i for i, t in enumerate(texts) if '题目检测生成器 · V1.10 · core' in t), -1)
+app_idx = next((i for i, t in enumerate(texts) if '题目检测生成器 · V1.10.1 · core' in t), -1)
 print('quiz template script:', template_idx)
 print('app script:', app_idx)
 print('pdf.js main present:', any('pdfjsLib' in t for t in texts))

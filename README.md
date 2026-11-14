@@ -3,12 +3,13 @@
 > 把 Word / 文字版 PDF 题库变成**可离线分发的单文件自测网页**：不装软件、不上传、不依赖网络。
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-1.10.1-0a84ff.svg)](CHANGELOG.md)
 [![Single file](https://img.shields.io/badge/output-single%20HTML-0a84ff.svg)](#生成的文件)
 [![Offline](https://img.shields.io/badge/offline-100%25-149e5a.svg)](#隐私与离线)
 [![Live demo](https://img.shields.io/badge/demo-online-0a84ff.svg)](https://liurunzeeee-crypto.github.io/quizforge/)
 [![AI-assisted](https://img.shields.io/badge/AI%20assisted-DeepSeek%20Harness-8b5cf6.svg)](#共创说明)
 
-![题目检测生成器 V1.10：导入 Word / PDF 题库](docs/screenshots/builder-import.png)
+![题目检测生成器：导入 Word / PDF 题库](docs/screenshots/builder-import.png)
 
 **[▶ 打开在线预览](https://liurunzeeee-crypto.github.io/quizforge/)** · 不用下载，浏览器里直接试用
 
@@ -209,6 +210,7 @@ npm run validate       # 可选：Python + lxml 检查构建产物
 
 - [x] V1.10：选项解析修复、Word/HTML 图片、Liquid Glass UI、单文件构建
 - [x] V1.10：文字版 PDF 自动提取文字 + 图片
+- [x] V1.10.1：Word 页码修复、GitHub Pages 在线预览、共创说明
 - [ ] 错题本导出 / 导入、成绩记录
 - [ ] Anki / CSV 导出
 - [ ] 更多题库模板与批量编辑
