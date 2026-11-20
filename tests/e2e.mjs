@@ -167,20 +167,45 @@ try {
   check('无首屏异常', !logs.some(x => x.startsWith('EXCEPTION')), logs.join('\n'));
 
   check('流畅模式按钮存在', await evaljs('!!document.querySelector("#btnPerf")'));
+  const perfBefore = await evaljs('document.documentElement.classList.contains("perf-lite")');
   await evaljs('document.querySelector("#btnPerf").click()');
   await sleep(150);
-  const perfMode = await evaljs(`(() => {
-    const g = document.querySelector('.glass');
-    const s = getComputedStyle(g);
+  const perfMode = await evaljs(`(() => ({
+    lite: document.documentElement.classList.contains('perf-lite'),
+    pressed: document.querySelector('#btnPerf').getAttribute('aria-pressed')
+  }))()`);
+  check('流畅模式按钮可切换', perfMode.lite === !perfBefore && perfMode.pressed === String(perfMode.lite),
+    JSON.stringify({ before: perfBefore, ...perfMode }));
+  await evaljs('document.querySelector("#btnPerf").click(); try{ localStorage.removeItem("quiz-builder/performance"); }catch(e){}');
+  await sleep(120);
+
+  await navigate(builderUrl + '#perf=lite');
+  const liteAudit = await evaljs(`(() => {
+    const probe = (sel) => { const el = document.querySelector(sel); if (!el) return 'missing'; const s = getComputedStyle(el); return s.backdropFilter || s.webkitBackdropFilter || 'none'; };
     return {
       lite: document.documentElement.classList.contains('perf-lite'),
-      pressed: document.querySelector('#btnPerf').getAttribute('aria-pressed'),
-      blur: s.backdropFilter || s.webkitBackdropFilter || ''
+      glass: probe('.glass'),
+      card: probe('.card'),
+      report: probe('.report'),
+      aurora: (() => { const el = document.querySelector('.aurora'); return el ? getComputedStyle(el).display : 'missing'; })()
     };
   })()`);
-  check('流畅模式可手动开启', perfMode.lite && perfMode.pressed === 'true' && /none/.test(perfMode.blur), JSON.stringify(perfMode));
-  await evaljs('document.querySelector("#btnPerf").click()');
-  await sleep(100);
+  check('流畅模式覆盖全部毛玻璃（glass/card/report）',
+    liteAudit.lite && /none/.test(liteAudit.glass) && /none/.test(liteAudit.card) && /none/.test(liteAudit.report),
+    JSON.stringify(liteAudit));
+  check('流畅模式关闭动态极光', liteAudit.aurora === 'none', liteAudit.aurora);
+  await navigate(builderUrl);
+
+  const verdicts = await evaljs(`({
+    hz30: __builder.perfVerdict([33,33,34,33,33,33,34,33]),
+    smooth60: __builder.perfVerdict([16,17,16,17,16,17,16,17]),
+    janky60: __builder.perfVerdict([16,17,45,60,16,17,50,55]),
+    twoSamples: __builder.perfVerdict([16,17])
+  })`);
+  check('帧率判据：不到 36fps → 进流畅模式', verdicts.hz30.lite === true, JSON.stringify(verdicts.hz30));
+  check('帧率判据：60fps 流畅 → 不切换', verdicts.smooth60.lite === false, JSON.stringify(verdicts.smooth60));
+  check('帧率判据：60fps 频繁丢帧 → 进流畅模式', verdicts.janky60.lite === true, JSON.stringify(verdicts.janky60));
+  check('帧率判据：样本太少不下结论', verdicts.twoSamples.lite === false, JSON.stringify(verdicts.twoSamples));
 
   await evaljs('document.querySelector("#btnDemo").click(); document.querySelector("#btnParse").click();');
   await sleep(500);

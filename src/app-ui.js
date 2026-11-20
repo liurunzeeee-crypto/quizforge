@@ -6,6 +6,9 @@
 /* 主题                                                               */
 /* ------------------------------------------------------------------ */
 var LS_PERF = 'quiz-builder/performance';
+var perfExplicit = '';
+var perfBusyUntil = 0;
+function markPerfBusy(ms){ perfBusyUntil = Date.now() + (ms || 4000); }
 function applyTheme(dark){
   document.documentElement.classList.toggle('dark', !!dark);
   var sun = $('.ic-sun'), moon = $('.ic-moon');
@@ -46,9 +49,10 @@ function initPerf(){
     var hm = /^#perf=(lite|full)$/.exec(location.hash || '');
     if (!pref && hm) pref = hm[1];
   }catch(e){}
+  perfExplicit = (pref === 'lite' || pref === 'full') ? pref : '';
   var lite = document.documentElement.classList.contains('perf-lite');
-  if (pref === 'lite') lite = true;
-  else if (pref === 'full') lite = false;
+  if (perfExplicit === 'lite') lite = true;
+  else if (perfExplicit === 'full') lite = false;
   else if (saved === 'lite') lite = true;
   else if (saved === 'full') lite = false;
   applyPerf(lite);
@@ -60,6 +64,58 @@ function togglePerf(){
   toast(lite
     ? '已开启流畅模式：关闭毛玻璃、动态背景和动画'
     : '已关闭流畅模式：恢复完整视觉效果');
+}
+
+/* 帧间隔样本 → 是否该进流畅模式
+   - 中位数 ≥28ms：不到 36fps，什么屏幕上都不流畅
+   - 中位数 ≥20ms 且明显比最快帧慢：在丢帧（毛玻璃合成跟不上）
+   纯函数，方便单测；不依赖 DOM */
+function perfVerdict(deltas){
+  if (!deltas || deltas.length < 5) return { lite: false, reason: 'samples' };
+  var s = deltas.slice().sort(function(a, b){ return a - b; });
+  var base = s[Math.floor(s.length * 0.1)] || s[0];
+  var median = s[Math.floor(s.length / 2)];
+  var ratio = base > 0 ? median / base : 1;
+  var lite = median >= 28 || (median >= 20 && ratio >= 1.8);
+  return { lite: lite, base: base, median: median, ratio: ratio };
+}
+
+/* UA 认不出来的浏览器（例如 360 极速上报纯 Chrome UA）用真实帧率兜底 */
+function autoDetectPerf(retry){
+  retry = retry || 0;
+  if (perfExplicit) return;                     /* 地址栏已明确指定，不干预 */
+  if (document.documentElement.classList.contains('perf-lite')) return;
+  try{ if (localStorage.getItem(LS_PERF)) return; }catch(e){}   /* 用户手动选过，尊重选择 */
+  if (Date.now() < perfBusyUntil){              /* 正在解析文件，测不准，等它结束 */
+    if (retry < 2) setTimeout(function(){ autoDetectPerf(retry + 1); }, 2000);
+    return;
+  }
+  if (document.visibilityState !== 'visible') return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (typeof requestAnimationFrame !== 'function') return;
+
+  var stamps = [];
+  var start = 0;
+  function step(t){
+    if (document.visibilityState !== 'visible') return;    /* 切到后台会被降频，测不准 */
+    if (!start) start = t;
+    stamps.push(t);
+    if (stamps.length < 20 && t - start < 1100){ requestAnimationFrame(step); return; }
+    verdict();
+  }
+  function verdict(){
+    if (stamps.length < 6) return;
+    var d = [], i;
+    for (i = 1; i < stamps.length; i++) d.push(stamps[i] - stamps[i - 1]);
+    var v = perfVerdict(d);
+    window.__perfFrameMedian = Math.round(v.median * 100) / 100;
+    if (v.lite && document.visibilityState === 'visible'){
+      applyPerf(true);
+      window.__perfAutoLite = true;
+      toast('检测到页面帧率偏低，已自动开启流畅模式；可在右上角 ⚡ 关闭');
+    }
+  }
+  requestAnimationFrame(step);
 }
 
 /* ------------------------------------------------------------------ */
@@ -1049,7 +1105,7 @@ function bindEvents(){
   $('#fileInput').addEventListener('change', function(e){
     var f = e.target.files && e.target.files[0];
     e.target.value = '';
-    if (f) handleImportFile(f);
+    if (f){ markPerfBusy(6000); handleImportFile(f); }
   });
   $('#btnDemo').addEventListener('click', function(){
     $('#rawInput').value = DEMO;
@@ -1065,7 +1121,7 @@ function bindEvents(){
     $('#fileHint').textContent = '未选择文件。';
     renderReport('', 'info');
   });
-  $('#btnParse').addEventListener('click', doParse);
+  $('#btnParse').addEventListener('click', function(){ markPerfBusy(4000); doParse(); });
 
   $('#rawInput').addEventListener('paste', function(e){
     var cd = e.clipboardData;
@@ -1370,6 +1426,8 @@ function boot(){
   if (restored){
     toast('已恢复上次编辑的 ' + state.questions.length + ' 题');
   }
+  /* 等首屏稳定后再测帧率，避开解析文件造成的假卡顿 */
+  setTimeout(autoDetectPerf, 2500);
 }
 
 /* 调试入口补充 */
@@ -1380,6 +1438,8 @@ window.__builder.parseHtmlRichtext = parseHtmlRichtext;
 window.__builder.inflateRaw = inflateRaw;
 window.__builder.renderList = renderList;
 window.__builder.doParse = doParse;
+window.__builder.togglePerf = togglePerf;
+window.__builder.perfVerdict = perfVerdict;
 
 bindEvents();
 boot();

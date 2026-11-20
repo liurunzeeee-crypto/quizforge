@@ -3,7 +3,7 @@
 > 把 Word / 文字版 PDF 题库变成**可离线分发的单文件自测网页**：不装软件、不上传、不依赖网络。
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.11.0-0a84ff.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.11.1-0a84ff.svg)](CHANGELOG.md)
 [![Single file](https://img.shields.io/badge/output-single%20HTML-0a84ff.svg)](#生成的文件)
 [![Offline](https://img.shields.io/badge/offline-100%25-149e5a.svg)](#隐私与离线)
 [![Live demo](https://img.shields.io/badge/demo-online-0a84ff.svg)](https://liurunzeeee-crypto.github.io/quizforge/)
@@ -61,7 +61,7 @@
 - **单文件生成**：图片以 data URL 内嵌；生成的 HTML 不依赖 CDN、字体、外部图片。
 - **两种作答模式**：练习模式（点选即判分）+ 考试模式（统一交卷、及格线）。
 - **现代化界面**：磨砂玻璃 / 极光背景 / 深浅色 / 五套主题 / 移动端适配。
-- **流畅模式**：旧版 Edge / 360 极速自动关闭毛玻璃、动态背景和动画，减少卡顿；也可点右上角 ⚡ 手动切换。
+- **流畅模式**：旧版 Edge / 360 极速自动关闭毛玻璃、动态背景和动画；认不出的浏览器按实际帧率兜底判断，也可点右上角 ⚡ 手动切换。
 - **本地草稿**：自动保存到浏览器 localStorage，可导出题库 JSON。
 - **隐私**：不联网、不上传；PDF.js 也完整内嵌在 HTML 里。
 
@@ -153,7 +153,7 @@ Word/PDF 里的图片会被转成 `[图1]`、`[图2]` 这样的标记，放在�
 - **PDF 复杂版式**：双栏、旋转页面、跨页表格、矢量图可能需要人工校对。
 - **Word 自动编号**：题号 / 选项字母如果是 Word 自动编号，浏览器无法还原；建议在 Word 里转为普通文本。
 - **EMF / WMF**：Word 里的矢量图浏览器无法显示，会被跳过并提示。
-- **浏览器差异**：优先 Chrome / Edge；Safari / Firefox 基本可用，但文件保存、剪贴板行为可能略有差异。旧版 Edge 92 / 360 极速如果卡顿，会自动进入流畅模式，也可以点右上角 ⚡ 手动切换。
+- **浏览器差异**：优先 Chrome / Edge；Safari / Firefox 基本可用，但文件保存、剪贴板行为可能略有差异。旧版 Edge 92 / 360 极速如果卡顿，会自动进入流畅模式，也可点右上角 ⚡ 手动切换；地址后面加 `#perf=full` 可以强制恢复完整效果。
 - **不做云同步**：没有账号、没有跨设备进度；需要备份请导出 JSON。
 - **不附带题库**：仓库里的示例只用于演示导入 / 生成格式，不代表项目方题库；请自行确认示例内容的版权。
 
@@ -213,6 +213,7 @@ npm run validate       # 可选：Python + lxml 检查构建产物
 - [x] V1.10：文字版 PDF 自动提取文字 + 图片
 - [x] V1.10.1：Word 页码修复、GitHub Pages 在线预览、共创说明
 - [x] V1.11：流畅模式、旧版 Edge / 360 兼容、检测页描边修复
+- [x] V1.11.1：流畅模式覆盖全部毛玻璃、按真实帧率兜底识别
 - [ ] 错题本导出 / 导入、成绩记录
 - [ ] Anki / CSV 导出
 - [ ] 更多题库模板与批量编辑

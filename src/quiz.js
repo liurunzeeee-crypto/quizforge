@@ -719,6 +719,52 @@ function metaChip(text, cls){
   return c;
 }
 
+/* UA 认不出来的浏览器（例如 360 极速上报纯 Chrome UA）用真实帧率兜底 */
+var PERF_KEY = 'quiz-builder/performance';
+function explicitPerf(){
+  try{
+    var p = new URLSearchParams(location.search).get('perf') || '';
+    var m = /^#perf=(lite|full)$/.exec(location.hash || '');
+    if (!p && m) p = m[1];
+    return (p === 'lite' || p === 'full') ? p : '';
+  }catch(e){ return ''; }
+}
+/* 帧间隔样本 → 是否该进流畅模式（与生成器同判据） */
+function perfVerdict(deltas){
+  if (!deltas || deltas.length < 5) return false;
+  var s = deltas.slice().sort(function(a, b){ return a - b; });
+  var base = s[Math.floor(s.length * 0.1)] || s[0];
+  var median = s[Math.floor(s.length / 2)];
+  var ratio = base > 0 ? median / base : 1;
+  return median >= 28 || (median >= 20 && ratio >= 1.8);
+}
+function autoDetectPerf(){
+  if (explicitPerf()) return;
+  if (document.documentElement.classList.contains('perf-lite')) return;
+  try{ if (localStorage.getItem(PERF_KEY)) return; }catch(e){}
+  if (document.visibilityState !== 'visible') return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (typeof requestAnimationFrame !== 'function') return;
+
+  var stamps = [], start = 0;
+  function step(t){
+    if (document.visibilityState !== 'visible') return;
+    if (!start) start = t;
+    stamps.push(t);
+    if (stamps.length < 20 && t - start < 1100){ requestAnimationFrame(step); return; }
+    verdict();
+  }
+  function verdict(){
+    if (stamps.length < 6) return;
+    var d = [], i;
+    for (i = 1; i < stamps.length; i++) d.push(stamps[i] - stamps[i - 1]);
+    if (perfVerdict(d) && document.visibilityState === 'visible'){
+      document.documentElement.classList.add('perf-lite');
+    }
+  }
+  requestAnimationFrame(step);
+}
+
 function boot(){
   if (!N){
     $('list').innerHTML = '<div class="card"><div class="ct"><span class="stem">这份检测页面里还没有题目。</span></div></div>';
@@ -760,6 +806,7 @@ function boot(){
     tip.appendChild(tct);
     $('list').insertBefore(tip, $('list').firstChild);
   }
+  setTimeout(autoDetectPerf, 2500);
 }
 
 boot();
