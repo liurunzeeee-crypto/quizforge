@@ -1,5 +1,5 @@
 /* ==========================================================================
-   题目检测生成器 · 1.10.1
+   题目检测生成器 · 1.11
    设计语言：Liquid Glass / 折射玻璃 / 柔光极光
    —— 全部为本文件内的纯 CSS，无外部字体、图片或脚本依赖。
    ========================================================================== */
@@ -240,6 +240,9 @@ html.dark .pill{color:#c6d3ea;background:rgba(44,55,82,.5);border-color:rgba(255
 }
 html.dark .icon-round{background:rgba(40,50,76,.55);border-color:rgba(255,255,255,.1)}
 .icon-round:hover{transform:translateY(-1px);background:rgba(255,255,255,.82)}
+.icon-round.on{background:var(--accent);border-color:var(--accent);color:#fff;
+  box-shadow:0 10px 22px -14px rgba(10,132,255,.85)}
+html.dark .icon-round.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .icon-round svg{width:20px;height:20px}
 
 /* ---------- Tabs ---------- */
@@ -460,6 +463,10 @@ details.help .hb{padding:0 20px 18px;font-size:.87rem;color:var(--ink-2)}
 details.help h4{font-size:.86rem;color:var(--ink);margin:15px 0 5px;font-weight:720}
 details.help ul{margin-left:18px}
 details.help li{margin:3px 0}
+details.help .perf-hint{
+  margin-top:10px;padding:8px 11px;border-radius:10px;
+  background:var(--accent-soft);color:var(--ink-2);font-size:.82rem;
+}
 details.help pre{
   background:linear-gradient(155deg,#101827,#0a1220);
   color:#dbe8ff;padding:14px 16px;border-radius:14px;overflow-x:auto;
@@ -708,7 +715,7 @@ html.dark .modal .mb{background:#070b14}
   .brand-mark svg{width:26px;height:26px}
   .hero-copy{flex:1 1 200px}
   .hero .lead{font-size:.88rem}
-  .hero-copy{padding-right:54px}
+  .hero-copy{padding-right:100px}
   .hero-tools{margin-left:0;position:absolute;top:18px;right:16px}
   .hero-tools .icon-round{width:40px;height:40px;border-radius:12px}
   .tabs{position:static;border-radius:17px}
@@ -719,6 +726,40 @@ html.dark .modal .mb{background:#070b14}
   .ansbtn,.optimgbtn{width:40px;height:40px}
   .thumb{width:58px;height:58px}
   .modal{max-height:94vh;border-radius:20px}
+}
+
+/* ---------- 流畅模式：旧版 Edge / 360 极速 / 低配集显 ---------- */
+html.perf-lite{--blur:0px;--shadow-1:none;--shadow-2:none;--shadow-pop:none}
+html.perf-lite .aurora .blob,
+html.perf-lite .grain,
+html.perf-lite .glass::after{display:none!important}
+html.perf-lite .glass,
+html.perf-lite .help,
+html.perf-lite .modal,
+html.perf-lite .mask,
+html.perf-lite .lightbox{
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+html.perf-lite .glass{
+  background:rgba(255,255,255,.96);
+  border-color:var(--line);
+  box-shadow:none;
+}
+html.perf-lite.dark .glass{background:rgba(22,29,46,.97)}
+html.perf-lite .qedit,
+html.perf-lite .card,
+html.perf-lite .modal,
+html.perf-lite .btn,
+html.perf-lite .icon-round{box-shadow:none!important}
+html.perf-lite .tabs{position:static}
+html.perf-lite *,
+html.perf-lite *::before,
+html.perf-lite *::after{
+  animation-duration:.001ms!important;
+  animation-iteration-count:1!important;
+  transition-duration:.001ms!important;
+  scroll-behavior:auto!important;
 }
 
 /* ---------- 减少动态 ---------- */

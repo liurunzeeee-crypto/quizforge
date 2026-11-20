@@ -5,6 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>__QUIZ_TITLE__</title>
+<script>
+/* 旧版 Edge / 360 极速自动进入流畅模式；生成页和生成器共用同一个偏好 */
+(function(){
+  try{
+    var KEY = 'quiz-builder/performance';
+    var ua = navigator.userAgent || '';
+    var saved = localStorage.getItem(KEY);
+    var auto = /Edg\/(?:9[0-9])\b/.test(ua) || /360SE|360EE|QIHU|qihoo|360Browser|360极速/i.test(ua);
+    var m = /Chrome\/(\d+)/.exec(ua);
+    if (m && parseInt(m[1], 10) < 100) auto = true;
+    try{
+      var pref = new URLSearchParams(location.search).get('perf') || '';
+      var hm = /^#perf=(lite|full)$/.exec(location.hash || '');
+      if (!pref && hm) pref = hm[1];
+      if (pref === 'lite') saved = 'lite';
+      if (pref === 'full') saved = 'full';
+    }catch(e){}
+    if (saved === 'lite' || (saved !== 'full' && auto)) document.documentElement.classList.add('perf-lite');
+  }catch(e){}
+})();
+</script>
 <style>/*__QUIZ_CSS__*/</style>
 </head>
 <body>

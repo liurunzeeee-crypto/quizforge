@@ -1,4 +1,4 @@
-﻿import { spawn } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -165,6 +165,22 @@ try {
   await navigate(builderUrl);
   check('builder 加载', await evaljs('!!window.__builder && document.querySelectorAll(".tab").length === 4'));
   check('无首屏异常', !logs.some(x => x.startsWith('EXCEPTION')), logs.join('\n'));
+
+  check('流畅模式按钮存在', await evaljs('!!document.querySelector("#btnPerf")'));
+  await evaljs('document.querySelector("#btnPerf").click()');
+  await sleep(150);
+  const perfMode = await evaljs(`(() => {
+    const g = document.querySelector('.glass');
+    const s = getComputedStyle(g);
+    return {
+      lite: document.documentElement.classList.contains('perf-lite'),
+      pressed: document.querySelector('#btnPerf').getAttribute('aria-pressed'),
+      blur: s.backdropFilter || s.webkitBackdropFilter || ''
+    };
+  })()`);
+  check('流畅模式可手动开启', perfMode.lite && perfMode.pressed === 'true' && /none/.test(perfMode.blur), JSON.stringify(perfMode));
+  await evaljs('document.querySelector("#btnPerf").click()');
+  await sleep(100);
 
   await evaljs('document.querySelector("#btnDemo").click(); document.querySelector("#btnParse").click();');
   await sleep(500);
@@ -367,11 +383,13 @@ D.转为封闭选区`)}; document.querySelector('#btnParse').click();`);
     qimgs: document.querySelectorAll('.qimg').length,
     opts: document.querySelectorAll('.opt').length,
     dark: document.documentElement.classList.contains('dark'),
+    outline: (() => { const c = document.querySelector('.card.cur'); if (!c) return 'no-current'; const s = getComputedStyle(c); return s.outlineStyle + ' ' + s.outlineWidth; })(),
     errors: 0
   }))()`);
   check('检测页题目数量（未答完的题会被跳过）', quizInfo.cards === 2, JSON.stringify(quizInfo));
   check('检测页图片渲染', quizInfo.qimgs >= 3, JSON.stringify(quizInfo));
   check('检测页标题', quizInfo.title.includes('图片题'), quizInfo.title);
+  check('检测页当前题不再有外描边', quizInfo.outline.startsWith('none'), quizInfo.outline);
   await screenshot('quiz-top.png');
 
   // 作答 + 判分

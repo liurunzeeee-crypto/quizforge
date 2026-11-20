@@ -16,6 +16,7 @@ tests/.tmp/
 .chrome-profile*/
 dev/
 private/
+V.1.11/
 *.log
 
 # Python

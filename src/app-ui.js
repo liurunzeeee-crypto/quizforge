@@ -1,10 +1,11 @@
 /* ==========================================================================
-   V1.10.1 · 界面渲染 / 交互 / 生成 / 题库
+   V1.11 · 界面渲染 / 交互 / 生成 / 题库
    ========================================================================== */
 
 /* ------------------------------------------------------------------ */
 /* 主题                                                               */
 /* ------------------------------------------------------------------ */
+var LS_PERF = 'quiz-builder/performance';
 function applyTheme(dark){
   document.documentElement.classList.toggle('dark', !!dark);
   var sun = $('.ic-sun'), moon = $('.ic-moon');
@@ -20,6 +21,45 @@ function toggleTheme(){
   var dark = !document.documentElement.classList.contains('dark');
   applyTheme(dark);
   try{ localStorage.setItem(LS_THEME, dark ? 'dark' : 'light'); }catch(e){}
+}
+
+/* ------------------------------------------------------------------ */
+/* 流畅模式（旧版 Edge / 360 / 低配集显）                              */
+/* ------------------------------------------------------------------ */
+function applyPerf(lite){
+  document.documentElement.classList.toggle('perf-lite', !!lite);
+  var b = document.getElementById('btnPerf');
+  if (b){
+    b.classList.toggle('on', !!lite);
+    b.setAttribute('aria-pressed', lite ? 'true' : 'false');
+    b.title = lite
+      ? '流畅模式已开启：点击恢复毛玻璃和动画'
+      : '开启流畅模式：关闭毛玻璃、动态背景和动画';
+  }
+}
+function initPerf(){
+  var saved = '';
+  try{ saved = localStorage.getItem(LS_PERF) || ''; }catch(e){}
+  var pref = '';
+  try{
+    pref = new URLSearchParams(location.search).get('perf') || '';
+    var hm = /^#perf=(lite|full)$/.exec(location.hash || '');
+    if (!pref && hm) pref = hm[1];
+  }catch(e){}
+  var lite = document.documentElement.classList.contains('perf-lite');
+  if (pref === 'lite') lite = true;
+  else if (pref === 'full') lite = false;
+  else if (saved === 'lite') lite = true;
+  else if (saved === 'full') lite = false;
+  applyPerf(lite);
+}
+function togglePerf(){
+  var lite = !document.documentElement.classList.contains('perf-lite');
+  applyPerf(lite);
+  try{ localStorage.setItem(LS_PERF, lite ? 'lite' : 'full'); }catch(e){}
+  toast(lite
+    ? '已开启流畅模式：关闭毛玻璃、动态背景和动画'
+    : '已关闭流畅模式：恢复完整视觉效果');
 }
 
 /* ------------------------------------------------------------------ */
@@ -1002,6 +1042,7 @@ function bindEvents(){
   });
   $('#btnGoEdit').addEventListener('click', function(){ switchTab('edit'); });
   $('#btnTheme').addEventListener('click', toggleTheme);
+  $('#btnPerf').addEventListener('click', togglePerf);
 
   /* 导入 */
   $('#btnPickFile').addEventListener('click', function(){ $('#fileInput').click(); });
@@ -1316,6 +1357,7 @@ function bindEvents(){
 /* ------------------------------------------------------------------ */
 function boot(){
   initTheme();
+  initPerf();
   syncSettingsInputs();
   syncMetaInputs();
   var restored = loadDraft();
